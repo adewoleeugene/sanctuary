@@ -1,0 +1,1 @@
+ALTER TABLE "activities" ADD COLUMN "cleaning_shifts" jsonb DEFAULT '["before","after"]'::jsonb NOT NULL;

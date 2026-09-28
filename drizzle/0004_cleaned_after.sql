@@ -1,0 +1,1 @@
+ALTER TABLE "cleaning_assignments" ADD COLUMN "cleaned_after" text;

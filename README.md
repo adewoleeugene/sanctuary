@@ -1,36 +1,41 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Sanctuary
 
-## Getting Started
+Service roles, cleaning roster, attendance and reports for the sanctuary team.
+Next.js 16 + Neon Postgres (Drizzle) + Neon Auth.
 
-First, run the development server:
+## Setup
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+`.env.local` needs:
+
+```
+DATABASE_URL=            # Neon pooled connection string
+NEON_AUTH_BASE_URL=      # Neon Auth URL for the branch
+NEON_AUTH_COOKIE_SECRET= # openssl rand -base64 32
+ADMIN_EMAILS=            # comma-separated; these become admins on first sign-in
+QUICK_LOGIN_USERNAME=    # Francess2026: signs in as admin with no password
+QUICK_LOGIN_EMAIL=       # the account behind the username
+QUICK_LOGIN_PASSWORD=    # random; only the server uses it
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+```bash
+npm install
+npm run db:migrate   # create tables
+npm run db:seed      # 20 members, default roles, activity types and cleaning zones
+npm run dev
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Neon project: `sanctuary` (`crimson-bar-65956023`) in adewoleeugenejohn's account.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Who can log in
 
-## Learn More
+Francess types **Francess2026** in "Username or email" on the sign-in page. No password is needed, so anyone who knows the username gets admin access. To turn it off, remove `QUICK_LOGIN_USERNAME`.
 
-To learn more about Next.js, take a look at the following resources:
+1. An email in `ADMIN_EMAILS` signs up at `/auth/sign-up` and becomes an admin.
+2. The admin adds coordinators by email in **Settings → People who can log in** and links each to their member record.
+3. The coordinator signs up with that same email and sees the services they coordinate.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Anyone else who signs up sees a "no access" page.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Changing the schema
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Edit `src/db/schema.ts`, then `npm run db:generate` and `npm run db:migrate`.
